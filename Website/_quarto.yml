@@ -4,12 +4,11 @@ project:
 website:
   title: "Website"
   navbar:
-    left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+   left:
+      - text: "Home"
+        file: index.qmd
       - Portfolio.qmd
-
+      - about.qmd
 format:
   html:
     theme: cosmo
