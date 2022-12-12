@@ -1,11 +1,23 @@
 ---
-title: "Website"
+title: "Nick Porr"
 ---
 
-This is a Quarto website.
+Hello! My name is Nick Porr. I am a second semester senior at George Washington University and an intern in the Washington Wizards Marketing Department.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+# Education
 
-```{r}
-1 + 1
-```
+Ramsey High School
+
+George Washington University (currently attending)
+
+-   BA in Journalism with minors in Statistics and Film Studies
+
+# Skills
+
+Writing
+
+Social Media
+
+Event Planning
+
+Data Analysis
