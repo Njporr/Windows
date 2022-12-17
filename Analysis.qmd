@@ -1,0 +1,24 @@
+---
+title: "Virginia Election Analysis"
+---
+
+The data below is pulled from Virginia.gov's data from the 2020 election for Senate and the Presidency. Ir has been recreated into a paginated file using the DT package to show a a breakdown of vote totals and percentages by county for the four candidates.
+
+For the presidency: Donald Trump (R) and Joseph R. Biden (D). For the Senate: Glenn A. Youngkin (R) and Terry R. McAuliffe (D).
+
+```{r}
+library(DT)
+joined_vacomparison <- read.csv("joined_vacomparison.csv")
+DT::datatable(joined_vacomparison)
+
+```
+
+Now that we have that data set up, we're going to create a new column to show the difference between Youngkin and Trump's vote percentages. Positive numbers will mean a Youngkin advantage, negative a Trump advantage. For this step, the tidyverse package is necessary.
+
+```{r}
+library(tidyverse)
+mutate(joined_vacomparison, YoungkinvsTrump= pct_youngkin-trump_pct)%>% DT::datatable(joined_vacomparison)
+
+```
+
+Now let's take a look at the counties with the five greatest difference in vote percentage of the two Republicans. To start, lets arrange

@@ -10,6 +10,7 @@ website:
         file: index.qmd
       - Portfolio.qmd
       - about.qmd
+      - Analysis.qmd
 format:
   html:
     theme: cosmo
