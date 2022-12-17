@@ -17,8 +17,76 @@ Now that we have that data set up, we're going to create a new column to show th
 
 ```{r}
 library(tidyverse)
-mutate(joined_vacomparison, YoungkinvsTrump= pct_youngkin-trump_pct)%>% DT::datatable(joined_vacomparison)
+Rmargin= mutate(joined_vacomparison, YoungkinvsTrump= pct_youngkin-trump_pct)
+DT::datatable(Rmargin)
 
 ```
 
-Now let's take a look at the counties with the five greatest difference in vote percentage of the two Republicans. To start, lets arrange
+Now let's take a look at the counties with the five greatest difference in vote percentage of the two Republicans. To start, lets arrange the counties by highest value to lowest
+
+```{r}
+Descending = arrange(Rmargin, desc(YoungkinvsTrump))
+DT::datatable(Descending)
+```
+
+Now let's seperate the top five localities (Radford, King George, Charlotte, Mecklenburg, and Prince Edward Counry).
+
+```{r}
+top5 <- head(Descending, 5)
+```
+
+From here we can take the new five data points and create a bar graph showing their percentage differences.
+
+```{r}
+ggplot(data = top5, aes(x=locality, y=YoungkinvsTrump))+geom_bar(stat = "identity",fill="red")+geom_text(aes(label=YoungkinvsTrump), vjust=1.6, color="white", size=3)+labs(title="Youngkin's Top Five Counties vs. Trump", x="County", y="Percent Difference")+theme(
+plot.title = element_text(hjust=0.5,color="black", size=20, face="bold"),
+axis.title.x = element_text(color="black", size=20, face="bold"),
+axis.title.y = element_text(color="black", size=20, face="bold"), axis.text.x = element_text(vjust = 0.5,hjust = 0.5, color="black", size=7.5, face="bold"))+scale_x_discrete(guide=guide_axis(n.dodge=3))
+```
+
+Using the same data set, we can also find the five counties where Youngkin had the highest percentage of the vote in his election for senate:. First, we arrange the data by his percentage and separate the top five counties:
+
+```{r}
+Youngkin <- arrange(joined_vacomparison, desc(pct_youngkin))
+Youngkin5 <- head(Youngkin,5)
+DT::datatable(Youngkin5)
+```
+
+Then we can make a similar table for these results:
+
+```{r}
+ggplot(data = Youngkin5, aes(x=locality, y=pct_youngkin))+geom_bar(stat = "identity",fill="red")+geom_text(aes(label=pct_youngkin), vjust=1.6, color="white", size=3)+labs(title="Youngkin's Top Five Counties", x="County", y="Percent of Vote")+theme(
+plot.title = element_text(hjust=0.5,color="black", size=20, face="bold"),
+axis.title.x = element_text(color="black", size=20, face="bold"),
+axis.title.y = element_text(color="black", size=20, face="bold"), axis.text.x = element_text(vjust = 0.5,hjust = 0.5, color="black", size=7.5, face="bold"))+scale_x_discrete(guide=guide_axis(n.dodge=3))
+```
+
+We can also do the same for his Democratic opponent McAullife:
+
+```{r}
+Mcauliffe <- arrange(joined_vacomparison, desc(pct_mcauliffe))
+MCauliffe5 <- head(Mcaullife,5)
+ggplot(data = MCauliffe5, aes(x=locality, y=pct_mcauliffe))+geom_bar(stat = "identity",fill="blue")+geom_text(aes(label=pct_mcauliffe), vjust=1.6, color="white", size=3)+labs(title="McAuliffe's Top Five Counties", x="County", y="Percent of Vote")+theme(
+plot.title = element_text(hjust=0.5,color="black", size=20, face="bold"),
+axis.title.x = element_text(color="black", size=20, face="bold"),
+axis.title.y = element_text(color="black", size=20, face="bold"), axis.text.x = element_text(vjust = 0.5,hjust = 0.5, color="black", size=7.5, face="bold"))+scale_x_discrete(guide=guide_axis(n.dodge=3))
+```
+
+One finding I was interested in was how the counties surrounding DC performed for the two senate candidates. For this, I first created a new column for margin of Youngkin vs. McAuliffe. I pulled out Arlington, Alexandria, Fairfax, and Falls Church, then created a bar graph:
+
+```{r}
+senatemargin=mutate(joined_vacomparison, YoungkinMargin= pct_youngkin-pct_mcauliffe)
+marginsDMV = filter(senatemargin, locality==c("FALLS CHURCH CITY")|locality==c("ALEXANDRIA CITY")|locality==c("FAIRFAX COUNTY")|locality==c("ARLINGTON COUNTY"))
+DT::datatable(marginsDMV)
+```
+
+Then, we can create a bar graph to accompany these margins, showing an expected dominant performance for the democratic candidate in the near-metropolitan localities.
+
+```{r}
+ggplot(data = marginsDMV, aes(x=locality, y=YoungkinMargin))+geom_bar(stat = "identity",fill="blue")+geom_text(aes(label=YoungkinMargin), vjust=-1.6, color="white", size=3)+labs(title="DMV Locality Senate Margins", x="Locality", y="Youngkin vs. McAuliffe")+theme(
+plot.title = element_text(hjust=0.5,color="black", size=20, face="bold"),
+axis.title.x = element_text(color="black", size=20, face="bold"),
+axis.title.y = element_text(color="black", size=20, face="bold"), axis.text.x = element_text(vjust = 0.5,hjust = 0.5, color="black", size=7.5, face="bold"))+scale_x_discrete(guide=guide_axis(n.dodge=3))
+```
+
+In these same counties i wanted to see how the percentage who voted for trump differed from those who voted for Youngkin. I used the same dataset with that margin form before
