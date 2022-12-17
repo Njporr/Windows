@@ -89,4 +89,34 @@ axis.title.x = element_text(color="black", size=20, face="bold"),
 axis.title.y = element_text(color="black", size=20, face="bold"), axis.text.x = element_text(vjust = 0.5,hjust = 0.5, color="black", size=7.5, face="bold"))+scale_x_discrete(guide=guide_axis(n.dodge=3))
 ```
 
-In these same counties i wanted to see how the percentage who voted for trump differed from those who voted for Youngkin. I used the same dataset with that margin form before
+In these same counties i wanted to see how the percentage who voted for trump differed from those who voted for Youngkin. I used the same dataset with that margin from before and filtered out the same four localities
+
+```{r}
+RmarginDMV = filter(Rmargin, locality==c("FALLS CHURCH CITY")|locality==c("ALEXANDRIA CITY")|locality==c("FAIRFAX COUNTY")|locality==c("ARLINGTON COUNTY"))
+DT::datatable(marginsDMV)
+```
+
+Then I created a bar graph to show these four counties Youngkin vs. Trump margin. AS expected, the narrative of Trump underperforming in city suburbs vs. his more moderate Republican counterparts is consistent in the DMV. Youngkin out performed Trump by over 5% in each county as shown below:
+
+```{r}
+ggplot(data = RmarginDMV, aes(x=locality, y=YoungkinvsTrump))+geom_bar(stat = "identity",fill="red")+geom_text(aes(label=YoungkinvsTrump), vjust=1.6, color="white", size=3)+labs(title="DMV Localities: Youngkin vs. Turmp", x="Locality", y="Youngkin vs. Trump")+theme(
+plot.title = element_text(hjust=0.5,color="black", size=20, face="bold"),
+axis.title.x = element_text(color="black", size=20, face="bold"),
+axis.title.y = element_text(color="black", size=20, face="bold"), axis.text.x = element_text(vjust = 0.5,hjust = 0.5, color="black", size=7.5, face="bold"))+scale_x_discrete(guide=guide_axis(n.dodge=3))
+```
+
+Finally, I wanted to see which counties went hardest to Joe Biden. To start, I created a Biden vs. Trump margin column from the original dataset, then arrange by the top Biden counties and select the top 5.
+
+```{r}
+presmargin=mutate(joined_vacomparison, bidenmargin= biden_pct-trump_pct)
+biden5 <- arrange(presmargin,desc(bidenmargin))%>%head(5)
+```
+
+Then I created a graph again using ggplot, showing the five counties Biden performed best in. Again, as expected, they are all metropolitan areas:
+
+```{r}
+ggplot(data = biden5, aes(x=locality, y=bidenmargin))+geom_bar(stat = "identity",fill="blue")+geom_text(aes(label=bidenmargin), vjust=1.6, color="white", size=3)+labs(title="Biden's 5 Biggest Locality Wins", x="Locality", y="Win Percentage")+theme(
+plot.title = element_text(hjust=0.5,color="black", size=20, face="bold"),
+axis.title.x = element_text(color="black", size=20, face="bold"),
+axis.title.y = element_text(color="black", size=20, face="bold"), axis.text.x = element_text(vjust = 0.5,hjust = 0.5, color="black", size=7.5, face="bold"))+scale_x_discrete(guide=guide_axis(n.dodge=3))
+```
