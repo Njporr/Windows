@@ -1,0 +1,71 @@
+---
+title: "Thunder Application Project"
+---
+
+Last year, I was lucky enough to advance to a later application round for a data analysis internship with the Oklahoma City Thunder. I sadly did not get the position, though I am extremely proud of the project I made for my application. Here I'm going to show how I used tibles and NBA game data to create one of the findings I found in this massive project: How did the two Conferences fair against each other?
+
+The project used two datasets, which are loaded in using the read.csv function. Also, we are loading the tidyverse package with contains ggplot as well as a number of other data tidying tools which are helpful here
+
+```{r}
+library(tidyverse)
+standings <- read.csv("combined_standings.csv", stringsAsFactors=FALSE)
+team_v_team <- read.csv("combined_team_vs_team_records.csv",stringsAsFactors=FALSE)
+```
+
+These datasets contain every NBA team's record from 2005-2020, as well as their head to head matchup results by season. These datasets contain plenty of information that can be extrapelated, but here, were are going to only look at how each conference compares against the other.
+
+(For those who don't follow the NBA, the Association is comprised of 30 teams split into two 15 team conferences by geography.)
+
+For this section we are going to only be using the team_v\_team dataset. To make it more managable, we are going to change it from a dataframe to a tibble, tidyr's version of a dataframe
+
+```{r}
+tibbletvt = as_tibble(team_v_team)
+```
+
+From here, we use the gather() function to group teams by opponent. Additionally, we don't want situations where a team plays themselves included. So we will use na.omit to remove those occurences which as *NAs*
+
+```{r}
+reorganized=gather(tibbletvt, key="Opponent", value="Record",ATL:WAS)
+noself=na.omit(reorganized)
+```
+
+Lastly for the process of cleaning, we need to seperate win/loss into to separate columns so there is one for each. Here we use the separate function, marking the '-' as the delineator to break it up by:
+
+```{r}
+final=separate(noself, Record, into = c("Wins","Losses"), sep="-")
+```
+
+It now may interpret these two columns as text, not numeric values. We can use as.numeric to fix that for each column:
+
+```{r}
+final$Wins=as.numeric(final$Wins)
+final$Losses = as.numeric(final$Losses)
+```
+
+Nowt to see how the two conferences faired against each other, we are going to filter out the reference teams to only include western conference teams. This code is a little long, but its just a use of the filter() function and the or operator between them
+
+```{r}
+west = filter(final, bb_ref_team_name==c("Dallas Mavericks")|bb_ref_team_name==c("Denver Nuggets")|bb_ref_team_name==c("Golden State Warriors")|bb_ref_team_name==c("Houston Rockets")|bb_ref_team_name==c("Los Angeles Clippers")|bb_ref_team_name==c("Los Angeles Lakers")|bb_ref_team_name==c("Memphis Grizzlies")|bb_ref_team_name==c("Minnesota Timberwolves")|bb_ref_team_name==c("New Orleans Hornets")|bb_ref_team_name==c("New Orleans Pelicans")|bb_ref_team_name==c("New Orleans/Oklahoma City Hornets")|bb_ref_team_name==c("Oklahoma City Thunder")|bb_ref_team_name==c("Seattle SuperSonics")|bb_ref_team_name==c("Phoenix Suns")|bb_ref_team_name==c("Portland Trail Blazers")|bb_ref_team_name==c("Sacramento Kings")|bb_ref_team_name==c("San Antonio Spurs")|bb_ref_team_name==c("Utah Jazz"))
+```
+
+Now that we only have Western team's records, we want to filter for games where they play one of the 15 Eastern Conference teams:
+
+```{r}
+west_v_east= filter(west, Opponent ==c("ATL")|Opponent ==c("BKN")|Opponent ==c("BOS")|Opponent ==c("CHA")|Opponent ==c("CHI")|Opponent ==c("CLE")|Opponent ==c("DET")|Opponent ==c("IND")|Opponent ==c("MIA")|Opponent ==c("MIL")|Opponent ==c("NYK")|Opponent ==c("ORL")|Opponent ==c("PHI")|Opponent ==c("TOR")|Opponent ==c("WAS"))
+```
+
+Now that we have a dataset of only west vs east games, we can find the sum of the wins and losses to see what their record was against each other:
+
+```{r}
+sum(west_v_east$Wins)
+sum(west_v_east$Losses)
+```
+
+With 3878 wins and 3081 losses, the Western Conference held a winning record against the Eastern conference over that 15 year period! To see their win percentage, just put wins over total:
+
+```{r}
+3878+3081
+3979/6959
+```
+
+The Western Conference was fairly dominant, winning 57.17% of their games!

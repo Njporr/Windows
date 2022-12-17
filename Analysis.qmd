@@ -4,7 +4,7 @@ title: "Virginia Election Analysis"
 
 The data below is pulled from Virginia.gov's data from the 2020 election for Senate and the Presidency. Ir has been recreated into a paginated file using the DT package to show a a breakdown of vote totals and percentages by county for the four candidates.
 
-For the presidency: Donald Trump (R) and Joseph R. Biden (D). For the Senate: Glenn A. Youngkin (R) and Terry R. McAuliffe (D).
+For the presidency: Donald Trump (R) and Joseph R. Biden (D). For the Senate: Glenn A. Youngkin (R) and Terry R. McAuliffe (D). Here is the data presented using the DT function:
 
 ```{r}
 library(DT)
@@ -22,20 +22,20 @@ DT::datatable(Rmargin)
 
 ```
 
-Now let's take a look at the counties with the five greatest difference in vote percentage of the two Republicans. To start, lets arrange the counties by highest value to lowest
+Now let's take a look at the counties with the five greatest difference in vote percentage of the two Republicans. To start, lets arrange the counties by highest value to lowest using the arrange() function.
 
 ```{r}
 Descending = arrange(Rmargin, desc(YoungkinvsTrump))
 DT::datatable(Descending)
 ```
 
-Now let's seperate the top five localities (Radford, King George, Charlotte, Mecklenburg, and Prince Edward Counry).
+Now let's separate the top five localities (Radford, King George, Charlotte, Mecklenburg, and Prince Edward County) The head() function will take the top five in the dataframe.
 
 ```{r}
 top5 <- head(Descending, 5)
 ```
 
-From here we can take the new five data points and create a bar graph showing their percentage differences.
+From here we can take the new five data points and create a bar graph showing their percentage differences. This uses gg_plot, specifically the geom_bar to create a bar graph showing the data separated above.
 
 ```{r}
 ggplot(data = top5, aes(x=locality, y=YoungkinvsTrump))+geom_bar(stat = "identity",fill="red")+geom_text(aes(label=YoungkinvsTrump), vjust=1.6, color="white", size=3)+labs(title="Youngkin's Top Five Counties vs. Trump", x="County", y="Percent Difference")+theme(

@@ -3,17 +3,32 @@ project:
   output-dir: docs
   
 website:
-  title: "Website"
+  page-footer: 
+    left: "Copyright 2022. Hal."
+    right:
+    - icon: github
+      href: https://github.com
+  title: "Nick Porr"
   navbar:
    left:
       - text: "Home"
         file: index.qmd
       - Portfolio.qmd
-      - about.qmd
+      - Thunder.qmd
       - Analysis.qmd
+      - text: Resume
+        href: https://drive.google.com/file/d/1PFmFqgdluPO5_IIbD-QDU6wi4WyV70j-/view?usp=share_link
+   right:  
+      - icon: twitter
+        href: https://twitter.com/nickporr?s=20&t=7OggJ48319E2llz5MU5rgA
+      - icon: linkedin
+        href: https://www.linkedin.com/in/nicholas-porr
+      - icon: github
+        href: https://github.com/Njporr
+      
 format:
   html:
-    theme: cosmo
+    theme: lux
     css: styles.css
     toc: true
 

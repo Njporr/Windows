@@ -1,9 +1,5 @@
 ---
-title: "About"
+title: "Resume"
 ---
 
-About this site
-
-```{r}
-1 + 1
-```
+# [Resume](https://drive.google.com/file/d/1PFmFqgdluPO5_IIbD-QDU6wi4WyV70j-/view?usp=sharing)
