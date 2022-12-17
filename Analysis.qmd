@@ -65,7 +65,7 @@ We can also do the same for his Democratic opponent McAullife:
 
 ```{r}
 Mcauliffe <- arrange(joined_vacomparison, desc(pct_mcauliffe))
-MCauliffe5 <- head(Mcaullife,5)
+MCauliffe5 <- head(Mcauliffe,5)
 ggplot(data = MCauliffe5, aes(x=locality, y=pct_mcauliffe))+geom_bar(stat = "identity",fill="blue")+geom_text(aes(label=pct_mcauliffe), vjust=1.6, color="white", size=3)+labs(title="McAuliffe's Top Five Counties", x="County", y="Percent of Vote")+theme(
 plot.title = element_text(hjust=0.5,color="black", size=20, face="bold"),
 axis.title.x = element_text(color="black", size=20, face="bold"),
